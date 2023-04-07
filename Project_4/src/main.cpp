@@ -3,56 +3,64 @@
 #include <unistd.h>
 
 #include "common.h"
-
-uint8_t getNumberOfFrames(int argc, char* argv[]);
-algo_t getAlgorithmChoice(int argc, char* argv[]);
-uint8_t getRefresh(int argc, char* argv[]);
-std::string getFilePath(int argc, char* argv[]);
+#include "fifoAlgorithm.h"
 
 int main(int argc, char* argv[])
 {
-    uint8_t numFrames, refresh;
+    uint8_t numFrames, inputArgs = 0x0F;
+    uint16_t refresh;
     algo_t replacementAlgo;
     std::string filePath;
     
-    int operator = -1;
-    while((operator = getopt(argc, argv, "n:")) != -1)
+    int option = -1;
+    while((option = getopt(argc, argv, "n:a:r:")) != -1)
     {
-        switch(operator)
+        switch(option)
         {
             case 'n':
                 numFrames = static_cast<uint8_t>(std::stoi(optarg));
+                inputArgs &= ~0x08;
                 break;
             case 'a':
-                switch(optarg)
+                if(static_cast<std::string>(optarg) == static_cast<std::string>("opt"))
+                    replacementAlgo = opt;
+                else if(static_cast<std::string>(optarg) == static_cast<std::string>("fifo"))
+                    replacementAlgo = fifo;
+                else if(static_cast<std::string>(optarg) == static_cast<std::string>("2nd"))
+                    replacementAlgo = second;
+                else if (static_cast<std::string>(optarg) == static_cast<std::string>("nru"))
+                    replacementAlgo = nru;
+                else
                 {
-                    case "opt":
-                        replacementAlgo = opt;
-                        break;
+                    std::cerr << "Usage -a <opt|fifo|2nd|nru>" << std::endl;
+                    return 1;
                 }
-            default:
-                std::cerr << "Usage -n is –n <numframes>" << std::endl;
-        }
-    }
-
-    return 0;
-}
-
-uint8_t getNumberOfFrames(int argc, char* argv[])
-{
-    int opt, n = -1;
-    while((opt = getopt(argc, argv, "n:")) != -1)
-    {
-        switch(opt)
-        {
-            case 'n':
-                n = std::stoi(optarg);
+                inputArgs &= ~0x04;
+                break;
+            case 'r':
+                refresh = static_cast<uint16_t>(std::stoi(optarg));
+                inputArgs &= ~0x01;
                 break;
             default:
-                std::cerr << "Usage -n is –n <numframes>" << std::endl;
+                std::cerr << "Usage –n <numframes> -a <opt|fifo|2nd|nru> [-r <refresh>] <tracefile>" << std::endl;
+                return 1;
         }
     }
-    if(n == -1)
-        std::cerr << "Number of frames required..." << std::endl;
-    return n;
+    if(optind >= argc)
+    {
+        std::cerr << "Usage –n <numframes> -a <opt|fifo|2nd|nru> [-r <refresh>] <tracefile>" << std::endl;
+        return 1;
+    }
+    filePath = argv[optind];
+    inputArgs &= ~0x02;
+
+    if(inputArgs >= 0x02)
+    {
+        std::cerr << "Usage –n <numframes> -a <opt|fifo|2nd|nru> [-r <refresh>] <tracefile>" << std::endl;
+        return 1;
+    }
+    FIFOAlgorithm test(numFrames, filePath);
+    test.runSimulation();
+    
+    return 0;
 }

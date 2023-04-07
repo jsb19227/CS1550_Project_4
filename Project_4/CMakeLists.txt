@@ -5,6 +5,8 @@ include_directories(include/)
 
 set(VIRTUAL_MEMORY_SIM_SRC
     src/main.cpp
+    src/virtualMemorySimulation.cpp
+    src/fifoAlgorithm.cpp
 )
 
 add_executable(vmsim ${VIRTUAL_MEMORY_SIM_SRC})
