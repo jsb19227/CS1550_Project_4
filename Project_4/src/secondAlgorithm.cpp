@@ -1,20 +1,26 @@
-#ifndef FIFOALGORITHM_CPP
-#define FIFOALGORITHM_CPP
+#ifndef SECONDALGORITHM_CPP
+#define SECONDALGORITHM_CPP
 
-#include "fifoAlgorithm.h"
+#include "secondAlgorithm.h"
 
-FIFOAlgorithm::~FIFOAlgorithm()
+SecondAlgorithm::~SecondAlgorithm()
 {
     this->inputFile.close();
 }
 
-void FIFOAlgorithm::pageReplacement(uint32_t memoryAddress)
+void SecondAlgorithm::pageReplacement(uint32_t memoryAddress)
 {
     uint32_t tableIndex = static_cast<uint32_t>(memoryAddress / this->pageSize);
     if(this->pageQueue.size() < this->numberOfFrames)
         this->pageTable[tableIndex].pageFrameNumber =this->pageQueue.size();
     else
     {
+        while(this->pageTable[this->pageQueue.front()].referenced)
+        {
+            this->pageTable[this->pageQueue.front()].referenced = 0;
+            this->pageQueue.push(this->pageQueue.front());
+            this->pageQueue.pop();
+        }
         if(this->pageTable[this->pageQueue.front()].dirty)
             totalWritesToDisk++;
         
@@ -33,9 +39,9 @@ void FIFOAlgorithm::pageReplacement(uint32_t memoryAddress)
     this->totalPageFaults++;
 }
 
-void FIFOAlgorithm::printName()
+void SecondAlgorithm::printName()
 {
-    std::cout << "Algorithm: FIFO" << std::endl; 
+    std::cout << "Algorithm: 2nd" << std::endl; 
 }
 
 #endif

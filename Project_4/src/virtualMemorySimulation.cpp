@@ -14,8 +14,8 @@ VirtualMemorySimulation::VirtualMemorySimulation(const uint8_t numberOfFrames, c
         exit(1);
     }
 
-    this->pageSize = (1 << 12) / this->numberOfFrames;
-    this->tableEntryTotal = static_cast<long>(1 << 31) / this->pageSize;
+    this->pageSize = (1 << 13) / this->numberOfFrames;
+    this->tableEntryTotal = (static_cast<long>(1) << 32) / this->pageSize;
     this-> pageTable = std::make_unique<entry_t[]>(this->tableEntryTotal);
     entry_t temp = {0, 0, 0, 0, 0};
     for(int i = 0; i < this->tableEntryTotal; i++)
@@ -24,12 +24,6 @@ VirtualMemorySimulation::VirtualMemorySimulation(const uint8_t numberOfFrames, c
     this->totalMemoryAccess = 0;
     this->totalPageFaults = 0;
     this->totalWritesToDisk = 0;
-    this->tableEntryTotal = 0;
-}
-
-VirtualMemorySimulation::~VirtualMemorySimulation()
-{
-    this->inputFile.close();
 }
 
 event_t VirtualMemorySimulation::readMemoryTrace(uint32_t *memoryAddress)
@@ -67,6 +61,9 @@ void VirtualMemorySimulation::instructionFetch(const uint32_t memoryAddress)
     uint32_t tableIndex = static_cast<uint32_t>(memoryAddress / this->pageSize);
     if(!this->pageTable[tableIndex].valid)
         pageReplacement(memoryAddress);
+    else
+        this->pageTable[tableIndex].referenced = 1;
+    this->totalMemoryAccess++;
 }
 
 void VirtualMemorySimulation::loadWord(const uint32_t memoryAddress)
@@ -76,6 +73,7 @@ void VirtualMemorySimulation::loadWord(const uint32_t memoryAddress)
         pageReplacement(memoryAddress);
     else
         this->pageTable[tableIndex].referenced = 1;
+    this->totalMemoryAccess++;
 }
 
 void VirtualMemorySimulation::storeWord(const uint32_t memoryAddress)
@@ -88,6 +86,7 @@ void VirtualMemorySimulation::storeWord(const uint32_t memoryAddress)
         this->pageTable[tableIndex].referenced = 1;
         this->pageTable[tableIndex].dirty = 1;
     } 
+    this->totalMemoryAccess++;
 }
 
 void VirtualMemorySimulation::modifyWord(const uint32_t memoryAddress)
@@ -99,7 +98,8 @@ void VirtualMemorySimulation::modifyWord(const uint32_t memoryAddress)
     {
         this->pageTable[tableIndex].referenced = 1;
         this->pageTable[tableIndex].dirty = 1;
-    }  
+    } 
+    this->totalMemoryAccess += 2; 
 }
 
 void VirtualMemorySimulation::runSimulation()

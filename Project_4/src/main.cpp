@@ -4,6 +4,7 @@
 
 #include "common.h"
 #include "fifoAlgorithm.h"
+#include "secondAlgorithm.h"
 
 int main(int argc, char* argv[])
 {
