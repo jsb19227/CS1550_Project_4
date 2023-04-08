@@ -58,8 +58,8 @@ void NRUAlgorithm::resetRefresh()
 
 uint32_t NRUAlgorithm::getNRU()
 {
-    uint32_t deadMeat = 0;
-    uint8_t value = 0;
+    uint32_t deadMeat = this->newStart;
+    uint8_t value = !this->pageTable[this->frameTable[deadMeat]].referenced << 1 + !this->pageTable[this->frameTable[deadMeat]].dirty;
     for(uint32_t i = 0; i < this->numberOfFrames; i++)
     {
         if(!this->pageTable[this->frameTable[i]].referenced && !this->pageTable[this->frameTable[i]].dirty)
@@ -71,6 +71,9 @@ uint32_t NRUAlgorithm::getNRU()
             deadMeat = i;
         }
     }
+    this->newStart++;
+    if(this->newStart >= this->numberOfFrames)
+        this->newStart = 0;
     return deadMeat;
 }
 

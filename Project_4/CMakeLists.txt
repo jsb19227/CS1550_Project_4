@@ -21,5 +21,12 @@ set(RESULT_COLLECTION_SRC
     src/optAlgorithm.cpp
 )
 
+set(NRU_OPTIMIZATION_SRC
+    src/refreshMath.cpp
+    src/virtualMemorySimulation.cpp
+    src/nruAlgorithm.cpp
+)
+
 add_executable(vmsim ${VIRTUAL_MEMORY_SIM_SRC})
 add_executable(results ${RESULT_COLLECTION_SRC})
+add_executable(nruOpt ${NRU_OPTIMIZATION_SRC})

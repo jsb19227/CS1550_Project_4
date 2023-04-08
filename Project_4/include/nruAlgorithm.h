@@ -5,7 +5,7 @@
 
 class NRUAlgorithm : public VirtualMemorySimulation{
     private:
-        uint32_t refreshRate, refreshCount, inputCount;
+        uint32_t refreshRate, refreshCount, inputCount, newStart;
         std::unique_ptr<uint32_t[]> frameTable; 
         virtual void pageReplacement(uint32_t memoryAddress);
         virtual void printName(void);
@@ -20,6 +20,7 @@ class NRUAlgorithm : public VirtualMemorySimulation{
             this->frameTable = std::make_unique<uint32_t[]>(this->numberOfFrames);
             for(int i = 0; i < this->numberOfFrames; i++)
                 this->frameTable[i] = 0;
+            this->newStart = 0;
         }
         ~NRUAlgorithm();
 };
