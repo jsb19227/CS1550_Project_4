@@ -6,6 +6,7 @@
 #include "fifoAlgorithm.h"
 #include "secondAlgorithm.h"
 #include "nruAlgorithm.h"
+#include "optAlgorithm.h"
 
 int main(int argc, char* argv[])
 {
@@ -61,8 +62,34 @@ int main(int argc, char* argv[])
         std::cerr << "Usage –n <numframes> -a <opt|fifo|2nd|nru> [-r <refresh>] <tracefile>" << std::endl;
         return 1;
     }
-    NRUAlgorithm test(numFrames, filePath, refresh);
-    test.runSimulation();
+    if(inputArgs != 0 && replacementAlgo == nru)
+    {
+        std::cerr << "NRU algorithm requires refresh rate..." << std::endl;
+        return 1;
+    }
+
+    filePath = "../extra/" + filePath;
+
+    if(replacementAlgo == opt)
+    {
+        OPTAlgorithm newSim(numFrames, filePath);
+        newSim.runSimulation();
+    }
+    else if(replacementAlgo == fifo)
+    {
+        FIFOAlgorithm newSim(numFrames, filePath);
+        newSim.runSimulation();
+    }
+    else if(replacementAlgo == second)
+    {
+        SecondAlgorithm newSim(numFrames, filePath);
+        newSim.runSimulation();
+    }
+    else if(replacementAlgo == nru)
+    {
+        NRUAlgorithm newSim(numFrames, filePath, refresh);
+        newSim.runSimulation();
+    }
     
     return 0;
 }

@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <cstdint>
+
 enum AlgorithmChoice{
     opt,
     fifo,

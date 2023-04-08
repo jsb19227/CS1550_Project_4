@@ -138,4 +138,24 @@ void VirtualMemorySimulation::printStatistics()
     std::cout << "Total page faults: " << (int)this->totalPageFaults << std::endl;
     std::cout << "Total writes to disk: " << (int)this->totalWritesToDisk << std::endl;
 }
+
+uint32_t VirtualMemorySimulation::getTotalMemoryAccess()
+{
+    return this->totalMemoryAccess;
+}
+
+uint32_t VirtualMemorySimulation::getTotalPageFaults()
+{
+    return this->totalPageFaults;
+}
+
+uint32_t VirtualMemorySimulation::getTotalWritesToDisk()
+{
+    return this->totalWritesToDisk;
+}
+
+uint32_t VirtualMemorySimulation::getNumberOfFrames()
+{
+    return this->numberOfFrames;
+}
 #endif

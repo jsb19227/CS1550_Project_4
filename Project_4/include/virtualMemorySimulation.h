@@ -12,7 +12,6 @@
 
 class VirtualMemorySimulation{
     private:
-        event_t readMemoryTrace(uint32_t *memoryAddress);
         void instructionFetch(const uint32_t memoryAddress);
         void loadWord(const uint32_t memoryAddress);
         void storeWord(const uint32_t memoryAddress);
@@ -27,10 +26,15 @@ class VirtualMemorySimulation{
         uint16_t pageSize;
         virtual void pageReplacement(uint32_t memoryAddress){};
         virtual void printName(void){};
+        event_t readMemoryTrace(uint32_t *memoryAddress);
         
     public:
         VirtualMemorySimulation(const uint8_t numberOfFrames, const std::string tracefile);
         void runSimulation(void);
+        uint32_t getTotalMemoryAccess(void);
+        uint32_t getTotalPageFaults(void);
+        uint32_t getTotalWritesToDisk(void);
+        uint32_t getNumberOfFrames(void);
 };
 
 #endif
