@@ -5,6 +5,7 @@
 #include "common.h"
 #include "fifoAlgorithm.h"
 #include "secondAlgorithm.h"
+#include "nruAlgorithm.h"
 
 int main(int argc, char* argv[])
 {
@@ -60,7 +61,7 @@ int main(int argc, char* argv[])
         std::cerr << "Usage –n <numframes> -a <opt|fifo|2nd|nru> [-r <refresh>] <tracefile>" << std::endl;
         return 1;
     }
-    FIFOAlgorithm test(numFrames, filePath);
+    NRUAlgorithm test(numFrames, filePath, refresh);
     test.runSimulation();
     
     return 0;

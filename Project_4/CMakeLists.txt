@@ -8,6 +8,7 @@ set(VIRTUAL_MEMORY_SIM_SRC
     src/virtualMemorySimulation.cpp
     src/fifoAlgorithm.cpp
     src/secondAlgorithm.cpp
+    src/nruAlgorithm.cpp
 )
 
 add_executable(vmsim ${VIRTUAL_MEMORY_SIM_SRC})

@@ -36,7 +36,7 @@ event_t VirtualMemorySimulation::readMemoryTrace(uint32_t *memoryAddress)
     std::getline(this->inputFile, line);
 
     if(line.length() <= 0)
-        return Exit;
+        return Ignore;
     
     line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
     if(line.at(0) == 'I')
