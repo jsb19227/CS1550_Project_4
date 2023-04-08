@@ -60,6 +60,8 @@ uint32_t NRUAlgorithm::getNRU()
 {
     uint32_t deadMeat = this->newStart;
     uint8_t value = !this->pageTable[this->frameTable[deadMeat]].referenced << 1 + !this->pageTable[this->frameTable[deadMeat]].dirty;
+    if(value == 3)
+        return deadMeat;
     for(uint32_t i = 0; i < this->numberOfFrames; i++)
     {
         if(!this->pageTable[this->frameTable[i]].referenced && !this->pageTable[this->frameTable[i]].dirty)
