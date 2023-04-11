@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+
+//Possible choices for algorithm
 enum AlgorithmChoice{
     opt,
     fifo,
@@ -11,6 +13,8 @@ enum AlgorithmChoice{
 };
 typedef AlgorithmChoice algo_t;
 
+
+//Different memory events
 enum MemoryEvent{
     Instruction,
     Load,
@@ -21,6 +25,8 @@ enum MemoryEvent{
 };
 typedef MemoryEvent event_t;
 
+
+//Page table entry
 struct PageTableEntry{
     uint8_t protection;
     uint8_t dirty;

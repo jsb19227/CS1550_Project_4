@@ -11,10 +11,12 @@ FIFOAlgorithm::~FIFOAlgorithm()
 void FIFOAlgorithm::pageReplacement(uint32_t memoryAddress)
 {
     uint32_t tableIndex = static_cast<uint32_t>(memoryAddress / this->pageSize);
+    //Fills the page table
     if(this->pageQueue.size() < this->numberOfFrames)
         this->pageTable[tableIndex].pageFrameNumber =this->pageQueue.size();
     else
     {
+        //Pops the front of the queue
         if(this->pageTable[this->pageQueue.front()].dirty)
             totalWritesToDisk++;
         
@@ -26,6 +28,7 @@ void FIFOAlgorithm::pageReplacement(uint32_t memoryAddress)
         this->pageQueue.pop();
     }
 
+    //Pushes new page to the queue
     this->pageQueue.push(tableIndex);
     this->pageTable[tableIndex].dirty = 0;
     this->pageTable[tableIndex].referenced = 1;
@@ -35,6 +38,7 @@ void FIFOAlgorithm::pageReplacement(uint32_t memoryAddress)
 
 void FIFOAlgorithm::printName()
 {
+    //Prints algo name
     std::cout << "Algorithm: FIFO" << std::endl; 
 }
 

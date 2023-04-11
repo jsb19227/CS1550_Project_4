@@ -5,6 +5,7 @@
 
 OPTAlgorithm::OPTAlgorithm(const uint8_t numberOfFrames, const std::string traceFile) : VirtualMemorySimulation(numberOfFrames, traceFile)
 {
+    //Constructor stuff
     this->inputCount = 0;
     futureSight = std::make_unique<std::vector<uint32_t>[]>(this->tableEntryTotal);
     frameTable = std::make_unique<uint32_t[]>(this->numberOfFrames);
@@ -12,6 +13,10 @@ OPTAlgorithm::OPTAlgorithm(const uint8_t numberOfFrames, const std::string trace
         frameTable[i] = 0;
     event_t newEvent = Ignore;
     uint32_t memAddress = 0, lineCount = 0;
+
+    //Read in entire input file
+    //The array is the number of pages
+    //Each vector has when the next time that page will be accessed
     while(newEvent != Exit)
     {
         newEvent = this->readMemoryTrace(&memAddress);
@@ -22,26 +27,33 @@ OPTAlgorithm::OPTAlgorithm(const uint8_t numberOfFrames, const std::string trace
             lineCount++;
         }
     }
+
+    //Close and reopen file
     this->inputFile.close();
     this->inputFile.open(traceFile);
 }
 
 OPTAlgorithm::~OPTAlgorithm()
 {
+    //Close file
     this->inputFile.close();
 }
 
 void OPTAlgorithm::pageReplacement(uint32_t memoryAddress)
 {
+    //Get table index
     uint32_t tableIndex = static_cast<uint32_t>(memoryAddress / this->pageSize);
     uint32_t out = 0;
     if(this->inputCount < this->numberOfFrames)
     {
+        //Fill table
         out = this->inputCount;
         this->inputCount++;
     }
     else
     {
+        //get optimal choice and eject it
+
         out = getOpt();
         if(this->pageTable[this->frameTable[out]].dirty)
             totalWritesToDisk++;
@@ -50,6 +62,8 @@ void OPTAlgorithm::pageReplacement(uint32_t memoryAddress)
         this->pageTable[this->frameTable[out]].referenced = 0;
         this->pageTable[this->frameTable[out]].valid = 0;
     }
+
+    //Put new page into the table
 
     this->pageTable[tableIndex].pageFrameNumber = out;
     this->frameTable[out] = tableIndex;
@@ -63,6 +77,7 @@ void OPTAlgorithm::pageReplacement(uint32_t memoryAddress)
 
 uint32_t OPTAlgorithm::getOpt()
 {
+    //Find the page that will be accessed farthest in the future
     uint32_t deadMeat = 0;
     uint32_t value = 0;
     for(uint32_t i = 0; i < this->numberOfFrames; i++)
@@ -77,6 +92,10 @@ uint32_t OPTAlgorithm::getOpt()
     }
     return deadMeat;
 }
+
+//Override the parent functions memory access functions
+//Main difference is that the memory access also removes 
+//The its memory access from future sight
 
 void OPTAlgorithm::instructionFetch(const uint32_t memoryAddress)
 {
@@ -128,6 +147,8 @@ void OPTAlgorithm::modifyWord(const uint32_t memoryAddress)
     this->futureSight[tableIndex].erase(this->futureSight[tableIndex].begin());
 }
 
+//Override run simulation
+
 void OPTAlgorithm::runSimulation()
 {
     uint32_t memoryAddress;
@@ -159,11 +180,13 @@ void OPTAlgorithm::runSimulation()
 
 void OPTAlgorithm::printName()
 {
+    //Print algo name
     std::cout << "Algorithm: OPT" << std::endl; 
 }
 
 void OPTAlgorithm::printStatistics()
 {
+    //Print stats
     std::cout << "Number of frames: " << (int)this->numberOfFrames << std::endl;
     std::cout << "Total memory accesses: " << (int)this->totalMemoryAccess << std::endl;
     std::cout << "Total page faults: " << (int)this->totalPageFaults << std::endl;

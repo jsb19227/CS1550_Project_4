@@ -15,6 +15,7 @@ int main(int argc, char* argv[])
     algo_t replacementAlgo;
     std::string filePath;
     
+    //Get all passed arguments
     int option = -1;
     while((option = getopt(argc, argv, "n:a:r:")) != -1)
     {
@@ -68,8 +69,10 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    //Read in file from the extra folder
     filePath = "../extra/" + filePath;
 
+    //Create proper object for the algorithm
     if(replacementAlgo == opt)
     {
         OPTAlgorithm newSim(numFrames, filePath);

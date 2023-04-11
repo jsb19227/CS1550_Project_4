@@ -1,3 +1,5 @@
+To add a file to run put it in the extra directory
+
 My project for CS1550 the virtual memory simulator
 
 To use:
@@ -5,15 +7,3 @@ To use:
   cmake ../../Project_4
   cmake --build .
 
-To add a file to run put it in the extra directory
-
-Creates 2 executables:
-
-vmsim is used as such:
-  vmsim –n <numframes> -a <opt|fifo|2nd|nru> [-r <refresh>] <tracefile>
-  -n => numframes is the number of frames in physcial memory
-  -a => algorithm to choice
-  -r => refresh rate, only applicable to nru algorithm.  6 seems to work well
-  tracefile => file to parse through
-
-results runs all of the algorithms at 8, 16, 32 and 64 number of frames over two traces and records the results to resutls.csv

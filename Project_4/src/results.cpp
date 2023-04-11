@@ -6,6 +6,8 @@
 
 void writeToFile(std::ofstream& file, VirtualMemorySimulation& sim);
 
+//Writes all requested data to a csv file
+
 int main()
 {
     std::ofstream output("../extra/results.csv");

@@ -5,6 +5,8 @@
 
 VirtualMemorySimulation::VirtualMemorySimulation(const uint8_t numberOfFrames, const std::string tracefile)
 {
+    //Open file and create all needed variables
+
     this->numberOfFrames = numberOfFrames;
     
     this->inputFile.open(tracefile);
@@ -28,6 +30,7 @@ VirtualMemorySimulation::VirtualMemorySimulation(const uint8_t numberOfFrames, c
 
 event_t VirtualMemorySimulation::readMemoryTrace(uint32_t *memoryAddress)
 {
+    //Read in line of input file and parse it for memory access
     if(this->inputFile.eof())
         return Exit;
     
@@ -38,6 +41,7 @@ event_t VirtualMemorySimulation::readMemoryTrace(uint32_t *memoryAddress)
     if(line.length() <= 0)
         return Ignore;
     
+    //Remove all white space
     line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
     if(line.at(0) == 'I')
         returnVal = Instruction;
@@ -56,6 +60,7 @@ event_t VirtualMemorySimulation::readMemoryTrace(uint32_t *memoryAddress)
     return returnVal;
 }
 
+//Instruction fetch
 void VirtualMemorySimulation::instructionFetch(const uint32_t memoryAddress)
 {
     uint32_t tableIndex = static_cast<uint32_t>(memoryAddress / this->pageSize);
@@ -66,6 +71,7 @@ void VirtualMemorySimulation::instructionFetch(const uint32_t memoryAddress)
     this->totalMemoryAccess++;
 }
 
+//Load word
 void VirtualMemorySimulation::loadWord(const uint32_t memoryAddress)
 {
     uint32_t tableIndex = static_cast<uint32_t>(memoryAddress / this->pageSize);
@@ -76,6 +82,7 @@ void VirtualMemorySimulation::loadWord(const uint32_t memoryAddress)
     this->totalMemoryAccess++;
 }
 
+//Store word
 void VirtualMemorySimulation::storeWord(const uint32_t memoryAddress)
 {
     uint32_t tableIndex = static_cast<uint32_t>(memoryAddress / this->pageSize);
@@ -89,6 +96,7 @@ void VirtualMemorySimulation::storeWord(const uint32_t memoryAddress)
     this->totalMemoryAccess++;
 }
 
+//Modify word
 void VirtualMemorySimulation::modifyWord(const uint32_t memoryAddress)
 {
     uint32_t tableIndex = static_cast<uint32_t>(memoryAddress / this->pageSize);
@@ -102,6 +110,7 @@ void VirtualMemorySimulation::modifyWord(const uint32_t memoryAddress)
     this->totalMemoryAccess += 2; 
 }
 
+//Runs the simulation until the file is out of lines
 void VirtualMemorySimulation::runSimulation()
 {
     uint32_t memoryAddress;
@@ -133,11 +142,15 @@ void VirtualMemorySimulation::runSimulation()
 
 void VirtualMemorySimulation::printStatistics()
 {
+
+    //Prints stats
     std::cout << "Number of frames: " << (int)this->numberOfFrames << std::endl;
     std::cout << "Total memory accesses: " << (int)this->totalMemoryAccess << std::endl;
     std::cout << "Total page faults: " << (int)this->totalPageFaults << std::endl;
     std::cout << "Total writes to disk: " << (int)this->totalWritesToDisk << std::endl;
 }
+
+//Getters and setters
 
 uint32_t VirtualMemorySimulation::getTotalMemoryAccess()
 {

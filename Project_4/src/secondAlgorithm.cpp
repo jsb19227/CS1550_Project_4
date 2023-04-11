@@ -4,17 +4,19 @@
 #include "secondAlgorithm.h"
 
 SecondAlgorithm::~SecondAlgorithm()
-{
+{//Close file
     this->inputFile.close();
 }
 
 void SecondAlgorithm::pageReplacement(uint32_t memoryAddress)
 {
+    //Get table index
     uint32_t tableIndex = static_cast<uint32_t>(memoryAddress / this->pageSize);
     if(this->pageQueue.size() < this->numberOfFrames)
         this->pageTable[tableIndex].pageFrameNumber =this->pageQueue.size();
     else
     {
+        //Find first unreferenced entry
         while(this->pageTable[this->pageQueue.front()].referenced)
         {
             this->pageTable[this->pageQueue.front()].referenced = 0;
@@ -32,6 +34,8 @@ void SecondAlgorithm::pageReplacement(uint32_t memoryAddress)
         this->pageQueue.pop();
     }
 
+    //Put new entry into the queue
+
     this->pageQueue.push(tableIndex);
     this->pageTable[tableIndex].dirty = 0;
     this->pageTable[tableIndex].referenced = 1;
@@ -41,6 +45,7 @@ void SecondAlgorithm::pageReplacement(uint32_t memoryAddress)
 
 void SecondAlgorithm::printName()
 {
+    //Print algo name
     std::cout << "Algorithm: 2nd" << std::endl; 
 }
 
