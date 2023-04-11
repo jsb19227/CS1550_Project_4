@@ -69,7 +69,7 @@ int main()
     output << "nru algorithm on cc.trace" << std::endl;
     for(int i = 0; i < 4; i++)
     {
-        NRUAlgorithm newSim(frameSizes[i], "../extra/cc.trace", 6);
+        NRUAlgorithm newSim(frameSizes[i], "../extra/cc.trace", frameSizes[i] / 2);
         newSim.runSimulation();
         std::cout << std::endl;
         writeToFile(output, newSim);
